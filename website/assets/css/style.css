@@ -1,0 +1,72 @@
+/* style.css */
+
+/* 1) SCROLLING WRAPPER for horizontal scroll with arrows */
+.scrolling-wrapper {
+    position: relative;         /* So the arrows can position relative to this container */
+    margin: 1rem 0;
+  }
+  
+  .scrolling-content {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-behavior: smooth;    /* Smooth scrolling when we change scrollLeft in JS */
+    gap: 1rem;                  /* Space between cards */
+    padding: 1rem 0;           /* Some vertical padding */
+  }
+  
+  /* Make sure cards have a fixed/min width so they align horizontally. */
+  .scrolling-content .card {
+    min-width: 200px;
+    flex: 0 0 auto;
+  }
+  
+  /* 2) ARROW BUTTONS */
+  .arrow-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+    background-color: rgba(0,0,0,0.5);
+    border: none;
+    padding: 0.75rem 1rem;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 2;
+    transition: background-color 0.2s ease;
+  }
+  .arrow-btn:hover {
+    background-color: rgba(0,0,0,0.7);
+  }
+  
+  /* Place left arrow on the left inside the scrolling-wrapper */
+  .arrow-left {
+    left: 0.5rem;
+  }
+  
+  /* Place right arrow on the right inside the scrolling-wrapper */
+  .arrow-right {
+    right: 0.5rem;
+  }
+  
+  /* 3) HERO CAROUSEL IMAGES (if you use Bootstrap Carousel) */
+  .hero-carousel .carousel-item {
+    height: 70vh; /* or whatever you prefer */
+    background-position: center;
+    background-size: cover;
+    position: relative;
+  }
+  .hero-carousel .carousel-item .overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4); /* semi-transparent overlay */
+    top: 0;
+    left: 0;
+  }
+  .hero-carousel .carousel-caption {
+    top: 30%;
+    transform: translateY(-30%);
+    bottom: auto;
+  }
+  
