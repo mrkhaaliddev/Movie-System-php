@@ -55,7 +55,7 @@ $result = $conn->query($sql);
                     <td><?= $row['release_year']; ?></td>
                     <td>
                         <a href="create.php?id=<?= $row['id']; ?>" class="btn btn-warning btn-sm">Edit</a>
-                        <a href="delete.php?id=<?= $row['id']; ?>" 
+                        <a href="index.php?id=<?= $row['id']; ?>" 
                            class="btn btn-danger btn-sm" 
                            onclick="return confirm('Are you sure?');">Delete</a>
                     </td>

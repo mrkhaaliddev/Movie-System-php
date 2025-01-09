@@ -7,10 +7,51 @@ $success = "";
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['change_password']) && $_POST['change_password'] == '1') {
+        // Change password logic
+        $currentPassword = $_POST['current_password'];
+        $newPassword = $_POST['new_password'];
+        $confirmPassword = $_POST['confirm_password'];
+        $emailVerify = $_SESSION['email'];
+
+        // Validate new password and confirm password
+        if ($newPassword !== $confirmPassword) {
+            $error = "New passwords do not match.";
+        } else {
+            // Fetch the current password hash from the database
+            $stmt = $conn->prepare("SELECT password FROM users WHERE email=?");
+            $stmt->bind_param("s", $emailVerify);
+            $stmt->execute();
+            $stmt->bind_result($password);
+            $stmt->fetch();
+            $stmt->close();
+
+
+            // Verify current password
+            if ($currentPassword !== $password) {
+                $error = "Current password is incorrect.";
+            } else {
+
+                // Update the password in the database
+                $stmt = $conn->prepare("UPDATE users SET password=? WHERE email=?");
+                $stmt->bind_param("ss", $newPassword, $emailVerify);
+                if ($stmt->execute()) {
+                    // Log out the user
+                    session_destroy();
+                    header("Location: /Movie-Website/auth/login.php?message=Password updated. Please log in again.");
+                    exit;
+                } else {
+                    $error = "Error updating password.";
+                }
+                $stmt->close();
+            }
+        }
+    } else {
+        // Update profile logic
         $username = $_POST['username'];
         $email    = $_POST['email'];
         $emailVerify = $_SESSION['email'];
-        
+
         // Validate & update
         $stmt = $conn->prepare("UPDATE users SET username=?, email=? WHERE email=?");
         $stmt->bind_param("sss", $username, $email, $emailVerify);
@@ -20,10 +61,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $error = "Error updating profile.";
         }
+    }
 }
-
-
-
 
 // Include your header + sidebar if needed
 include_once '../includes/header.php';
@@ -105,8 +144,7 @@ include_once '../includes/sideBar.php';
         name="email" 
         class="form-control" 
         value="<?php echo $email; ?>" 
-        required 
-    />
+      />
     </div>
 
         <div class="d-grid">
@@ -119,9 +157,52 @@ include_once '../includes/sideBar.php';
       <hr />
     </div>
   </div>
+  <div class="profile-card card mt-5">
+  <div class="card-body">
+  <!-- Change Password -->
+  <form method="POST" action="">
+    <input type="hidden" name="change_password" value="1" />
+    <div class="mb-3">
+      <label class="form-label">Current Password</label>
+      <input 
+        type="password" 
+        name="current_password" 
+        class="form-control" 
+        placeholder="Enter current password" 
+        required 
+      />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">New Password</label>
+      <input 
+        type="password" 
+        name="new_password" 
+        class="form-control" 
+        placeholder="Enter new password" 
+        required 
+      />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Confirm New Password</label>
+      <input 
+        type="password" 
+        name="confirm_password" 
+        class="form-control" 
+        placeholder="Re-enter new password" 
+        required 
+      />
+    </div>
+    <div class="d-grid">
+      <button type="submit" class="btn btn-success">
+        <i class="bi bi-key"></i> Change Password
+      </button>
+    </div>
+  </form>
    </div>
-
+   </div>
+   </div>
 <?php
+
 // Include your footer
 include_once '../includes/footer.php';
 ?>

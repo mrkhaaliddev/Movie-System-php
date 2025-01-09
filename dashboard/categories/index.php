@@ -4,7 +4,7 @@ require_once '../../includes/db.php';
 require_once '../../includes/header.php';
 require_once '../../includes/sideBar.php';
 
-// Check if "action=delete" is triggered in URL
+// The code that is doing the delete
 if (isset($_GET['action']) && $_GET['action'] === 'delete') {
     $id = $_GET['id'] ?? null;
     if ($id) {
